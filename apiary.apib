@@ -36,7 +36,7 @@ These are the video stream resources.
 - lng (int): Longitude
 - geo_reference (string): Location reference text
 - channels (array): Channels list
-- started_on (string): Stream started date 2012-01-23T12:00:00.000
+- started_on (string): Stream started date
 --
 
 Create a new stream
@@ -82,60 +82,175 @@ Stream information
 DELETE /streams/{id}
 < 200
 < Content-Type: application/json
-{ ok }
+{ "status": "ok" }
 
 List the current stream channels
 GET /streams/{id}/channels
 < 200
 < Content-Type: application/json
-[ channels ]
+[2, 1]
 
 Adds the current stream to a channel
 POST /streams/{id}/channels
 > Content-Type: application/json
 > Accept: application/json
-{ channelid }
+{ 
+    "channel_id": 2
+}
 < 201
 < Content-Type: application/json
-[ channels ]
+{
+    "id": 2,
+    "identifier": "LosPinguinos",
+    "streams": [
+        { 
+            "id": 7,
+            "title": "No al lucro",
+            "desc": "",
+            "lat": -33462666,
+            "lng": -70661713,
+            "geo_reference": "Alameda",
+            "channels": [2, 5],
+            "started_on": "2012-01-23T12:00:00.000"
+        },
+        { 
+            "id": 8,
+            "title": "El wanaco",
+            "desc": "Esta pegando fuerte",
+            "lat": -33462666,
+            "lng": -70661713,
+            "geo_reference": "Nataniel Cox",
+            "channels": [2],
+            "started_on": "2012-01-23T12:00:00.000"
+        }
+    ],
+    "streams_count": 2,
+    "created_on": "2012-01-23T12:00:00.000"
+}   
 
 Removes the current stream from the channel
 DELETE /streams/{id}/channels/{id}
 < 200
 < Content-Type: application/json
-[ channels ]
+{ "status": "ok" }
 
 -- 
 Channels Resources 
 These are the channel resources.
 
 ###Channel Properties
-- id
+- id (int): Channel id
+- identifier (string): Unique name for the channel
+- streams (array): List of streams
+- streams_count: Count of streams in the channel
+- created_on (string): Channel created date
 --
 
 List all the channels
 GET /channels
 < 200
-[ channels ]
+[
+    {
+        "id": 1,
+        "identifier": "LolapaluzaCL",
+        "streams": [
+            { 
+                "id": 5,
+                "title": "Lolapaluza en Chile",
+                "desc": "Excelent music!",
+                "lat": -33462666,
+                "lng": -70661713,
+                "geo_reference": "Parque O'higgins",
+                "channels": [1, 5],
+                "started_on": "2012-01-23T12:00:00.000"
+            },
+            { 
+                "id": 6,
+                "title": "Lolapaluza!",
+                "desc": "Chancho en piedra",
+                "lat": -33462666,
+                "lng": -70661713,
+                "geo_reference": "Parque O'higgins",
+                "channels": [1, 3],
+                "started_on": "2012-01-23T12:00:00.000"
+            }
+        ],
+        "streams_count": 2,
+        "created_on": "2012-01-23T12:00:00.000"
+    },
+    {
+        "id": 2,
+        "identifier": "LosPinguinos",
+        "streams": [
+            { 
+                "id": 7,
+                "title": "No al lucro",
+                "desc": "",
+                "lat": -33462666,
+                "lng": -70661713,
+                "geo_reference": "Alameda",
+                "channels": [2],
+                "started_on": "2012-01-23T12:00:00.000"
+            }
+        ],
+        "streams_count": 1,
+        "created_on": "2012-01-23T12:00:00.000"
+    }    
+]
 
 Create a new empty channel
 POST /channels
 > Content-Type: application/json
 > Accept: application/json
-{ channel }
+{ 
+    "identifier": "LolapaluzaCL"
+}
 < 201
 < Content-Type: application/json
-{ channel }
+{
+    "id": 1,
+    "identifier": "LolapaluzaCL",
+    "streams": [],
+    "streams_count": 0,
+    "created_on": "2012-01-23T12:00:00.000"
+}
 
 Channel information
 GET /channels/{id}
 < 200
-{ channel, [streams]}
+{
+    "id": 1,
+    "identifier": "LolapaluzaCL",
+    "streams": [
+        { 
+            "id": 5,
+            "title": "Lolapaluza en Chile",
+            "desc": "Excelent music!",
+            "lat": -33462666,
+            "lng": -70661713,
+            "geo_reference": "Parque O'higgins",
+            "channels": [1, 5],
+            "started_on": "2012-01-23T12:00:00.000"
+        },
+        { 
+            "id": 6,
+            "title": "Lolapaluza!",
+            "desc": "Chancho en piedra",
+            "lat": -33462666,
+            "lng": -70661713,
+            "geo_reference": "Parque O'higgins",
+            "channels": [1, 3],
+            "started_on": "2012-01-23T12:00:00.000"
+        }
+    ],
+    "streams_count": 3,
+    "created_on": "2012-01-23T12:00:00.000"
+}
 
 Delete the channel
 DELETE /channel/{id}
 < 200
-{ ok }
+{ "status": "ok" }
 
 Lists the current channel streams
 GET /channels/{id}/streams
@@ -148,7 +263,7 @@ GET /channels/{id}/streams
         "lat": -33462666,
         "lng": -70661713,
         "geo_reference": "Parque O'higgins",
-        "channels": [5],
+        "channels": [1, 5],
         "started_on": "2012-01-23T12:00:00.000"
     },
     { 
@@ -158,7 +273,7 @@ GET /channels/{id}/streams
         "lat": -33462666,
         "lng": -70661713,
         "geo_reference": "Parque O'higgins",
-        "channels": [5],
+        "channels": [1, 3],
         "started_on": "2012-01-23T12:00:00.000"
     }
 ]
