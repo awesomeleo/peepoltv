@@ -1,0 +1,187 @@
+HOST: http://www.peepol.tv/
+
+--- Peepol.tv ---
+
+---
+#API documentation
+
+## Allowed HTTPs requests:
+
+    POST   :   To create a resource
+    GET    :   Get a resource or list of resources
+    DELETE :   To delete resource
+    PUT    :   To update a resource
+
+## Description Of Usual Server Responses
+
+- 200 `OK` - the request was successful.
+- 201 `Created` - the request was successful and a resource was created.
+- 204 `No Content` - the request was successful but there is no representation to return (i.e. the response is empty).
+- 400 `Bad Request` - the request could not be understood or was missing required parameters.
+- 401 `Unauthorized` - authentication failed or user doesn't have permissions for requested operation.
+- 403 `Forbidden` - access denied.
+- 404 `Not Found` - resource was not found
+- 405 `Method Not Allowed` - requested method is not supported for resource.
+---
+
+--
+Streams Resources
+These are the video stream resources.
+
+###Stream Properties
+- id (int): Stream id
+- title (string): Title of the stream
+- desc (string): Description
+- lat (int): Latitude
+- lng (int): Longitude
+- geo_reference (string): Location reference text
+- channels (array): Channels list
+- started_on (string): Stream started date 2012-01-23T12:00:00.000
+--
+
+Create a new stream
+POST /streams
+> Content-Type: application/json
+> Accept: application/json
+{ 
+    "title": "Lolapaluza en Chile",
+    "desc": "Excelent music!",
+    "lat": -33462666,
+    "lng": -70661713,
+    "geo_reference": "Parque O'higgins"
+}
+< 201
+< Content-Type: application/json
+{ 
+    "id": 5,
+    "title": "Lolapaluza en Chile",
+    "desc": "Excelent music!",
+    "lat": -33462666,
+    "lng": -70661713,
+    "geo_reference": "Parque O'higgins",
+    "channels": [],
+    "started_on": "2012-01-23T12:00:00.000"
+}
+
+Stream information
+GET /streams/{id}
+< 200
+< Content-Type: application/json
+{ 
+    "id": 5,
+    "title": "Lolapaluza en Chile",
+    "desc": "Excelent music!",
+    "lat": -33462666,
+    "lng": -70661713,
+    "geo_reference": "Parque O'higgins",
+    "channels": [],
+    "started_on": "2012-01-23T12:00:00.000"
+}
+
+Stream information
+DELETE /streams/{id}
+< 200
+< Content-Type: application/json
+{ ok }
+
+List the current stream channels
+GET /streams/{id}/channels
+< 200
+< Content-Type: application/json
+[ channels ]
+
+Adds the current stream to a channel
+POST /streams/{id}/channels
+> Content-Type: application/json
+> Accept: application/json
+{ channelid }
+< 201
+< Content-Type: application/json
+[ channels ]
+
+Removes the current stream from the channel
+DELETE /streams/{id}/channels/{id}
+< 200
+< Content-Type: application/json
+[ channels ]
+
+-- 
+Channels Resources 
+These are the channel resources.
+
+###Channel Properties
+- id
+--
+
+List all the channels
+GET /channels
+< 200
+[ channels ]
+
+Create a new empty channel
+POST /channels
+> Content-Type: application/json
+> Accept: application/json
+{ channel }
+< 201
+< Content-Type: application/json
+{ channel }
+
+Channel information
+GET /channels/{id}
+< 200
+{ channel, [streams]}
+
+Delete the channel
+DELETE /channel/{id}
+< 200
+{ ok }
+
+Lists the current channel streams
+GET /channels/{id}/streams
+< 200
+[
+    { 
+        "id": 5,
+        "title": "Lolapaluza en Chile",
+        "desc": "Excelent music!",
+        "lat": -33462666,
+        "lng": -70661713,
+        "geo_reference": "Parque O'higgins",
+        "channels": [5],
+        "started_on": "2012-01-23T12:00:00.000"
+    },
+    { 
+        "id": 6,
+        "title": "Lolapaluza!",
+        "desc": "Chancho en piedra",
+        "lat": -33462666,
+        "lng": -70661713,
+        "geo_reference": "Parque O'higgins",
+        "channels": [5],
+        "started_on": "2012-01-23T12:00:00.000"
+    }
+]
+
+Create a new stream in the current channel
+POST /channels/{id}/streams
+> Content-Type: application/json
+> Accept: application/json
+{ 
+    "title": "Lolapaluza en Chile",
+    "desc": "Excelent music!",
+    "lat": -33462666,
+    "lng": -70661713,
+    "geo_reference": "Parque O'higgins"
+}
+< 201
+{ 
+    "id": 5,
+    "title": "Lolapaluza en Chile",
+    "desc": "Excelent music!",
+    "lat": -33462666,
+    "lng": -70661713,
+    "geo_reference": "Parque O'higgins",
+    "channels": [],
+    "started_on": "2012-01-23T12:00:00.000"
+}
